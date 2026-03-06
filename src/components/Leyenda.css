@@ -1,0 +1,89 @@
+.leyenda {
+  padding: 20px;
+  background: #111520;
+  border-right: 1px solid #1e2740;
+  width: 220px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  overflow-y: auto;
+  height: 100%;
+}
+
+.leyenda-titulo {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: #3e4a6a;
+  font-family: 'Space Mono', monospace;
+  margin-top: 4px;
+}
+
+.progreso-barra-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.progreso-barra {
+  height: 6px;
+  background: #1e2740;
+  border-radius: 99px;
+  overflow: hidden;
+}
+
+.progreso-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #4f7cff, #00e5a0);
+  border-radius: 99px;
+  transition: width 0.4s ease;
+}
+
+.progreso-label {
+  font-size: 11px;
+  color: #5a6280;
+  font-family: 'Space Mono', monospace;
+}
+
+.leyenda-items {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.leyenda-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.leyenda-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.leyenda-nombre {
+  font-size: 12px;
+  color: #8090b0;
+  flex: 1;
+  font-weight: 500;
+}
+
+.leyenda-count {
+  font-size: 11px;
+  font-family: 'Space Mono', monospace;
+  font-weight: 700;
+}
+
+.leyenda-hint {
+  margin-top: 16px;
+  font-size: 10px;
+  color: #2e3a55;
+  line-height: 1.5;
+  border-top: 1px solid #1a2035;
+  padding-top: 14px;
+}

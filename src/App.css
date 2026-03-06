@@ -1,0 +1,154 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;700;800&display=swap');
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: #0a0d14;
+  color: #e8eaf2;
+  font-family: 'Syne', sans-serif;
+  height: 100dvh;
+  overflow: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+#root { height: 100dvh; display: flex; flex-direction: column; }
+
+/* ── HEADER ─────────────────────────────────────── */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 12px 24px;
+  background: #0e1220;
+  border-bottom: 1px solid #1e2740;
+  flex-shrink: 0;
+  flex-wrap: wrap;
+  z-index: 10;
+}
+
+.header-left { display: flex; align-items: center; gap: 14px; }
+
+.header-logo {
+  width: 40px; height: 40px;
+  background: linear-gradient(135deg, #4f7cff, #00e5a0);
+  border-radius: 9px;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Space Mono', monospace;
+  font-size: 12px; font-weight: 700; color: #fff;
+  flex-shrink: 0;
+}
+
+.header-title { font-size: 15px; font-weight: 700; }
+.header-sub   { font-size: 10px; color: #3e4a6a; margin-top: 2px; font-family: 'Space Mono', monospace; }
+
+.header-controls { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.filtros-anio    { display: flex; gap: 6px; flex-wrap: wrap; }
+
+.btn-anio {
+  padding: 4px 11px;
+  border-radius: 6px;
+  font-size: 10px; font-family: 'Space Mono', monospace; font-weight: 700;
+  background: transparent; border: 1px solid #1e2740; color: #3e4a6a;
+  cursor: pointer; transition: all 0.15s; letter-spacing: 0.04em;
+}
+.btn-anio:hover  { border-color: var(--anio-color, #4f7cff); color: var(--anio-color, #4f7cff); }
+.btn-anio.activo { background: rgba(79,124,255,0.1); border-color: var(--anio-color, #4f7cff); color: var(--anio-color, #4f7cff); }
+
+.btn-toggle {
+  padding: 4px 13px;
+  border-radius: 6px; font-size: 10px; font-family: 'Space Mono', monospace; font-weight: 700;
+  background: transparent; border: 1px solid #1e2740; color: #3e4a6a; cursor: pointer; transition: all 0.15s;
+}
+.btn-toggle:hover, .btn-toggle.activo { background: rgba(0,229,160,0.08); border-color: #00e5a0; color: #00e5a0; }
+
+.btn-reset {
+  padding: 4px 13px;
+  border-radius: 6px; font-size: 10px; font-family: 'Space Mono', monospace; font-weight: 700;
+  background: transparent; border: 1px solid #2a1a1a; color: #4a2a2a; cursor: pointer; transition: all 0.15s;
+}
+.btn-reset:hover { background: rgba(255,95,109,0.08); border-color: #ff5f6d; color: #ff5f6d; }
+
+/* ── MAIN ────────────────────────────────────────── */
+.main { display: flex;
+  flex: 1;
+  overflow: hidden;
+  min-height: 0; }
+
+/* ── CANVAS ──────────────────────────────────────── */
+.canvas-wrap {
+   flex: 1;
+  position: relative;
+  background: #0a0d14;
+  height: 100%;
+  overflow: hidden;
+}
+
+/* React Flow overrides */
+.react-flow__background { background: #0a0d14; }
+.react-flow__controls button {
+  background: #111520 !important;
+  border-color: #1e2740 !important;
+  color: #5a6280 !important;
+  fill: #5a6280 !important;
+}
+.react-flow__controls button:hover { background: #171d2e !important; color: #e8eaf2 !important; fill: #e8eaf2 !important; }
+
+.react-flow__minimap { border-radius: 8px !important; overflow: hidden; }
+
+/* Etiquetas de año */
+.anio-labels {
+  position: absolute;
+  top: 0; left: 0;
+  pointer-events: none;
+  z-index: 5;
+  display: none; /* las quitamos — el nodo ya muestra el año */
+}
+
+/* ── Botones undo/redo/reset-pos ─────────────────── */
+.btn-group {
+  display: flex;
+  gap: 4px;
+}
+
+.btn-icon {
+  width: 30px;
+  height: 30px;
+  border-radius: 6px;
+  font-size: 15px;
+  background: transparent;
+  border: 1px solid #1e2740;
+  color: #5a6280;
+  cursor: pointer;
+  transition: all 0.15s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+
+.btn-icon:hover:not(:disabled) {
+  background: rgba(79,124,255,0.1);
+  border-color: #4f7cff;
+  color: #4f7cff;
+}
+
+.btn-icon:disabled {
+  opacity: 0.25;
+  cursor: not-allowed;
+}
+.react-flow__edge {
+  transition: opacity 0.6s ease;
+}
+.app {
+  display: flex;
+  flex-direction: column;
+  height: 100dvh;
+  overflow: hidden;
+}
+.react-flow {
+  height: 100% !important;
+}
+.react-flow__attribution {
+  display: none;
+}
