@@ -70,18 +70,13 @@ body {
 .btn-reset:hover { background: rgba(255,95,109,0.08); border-color: #ff5f6d; color: #ff5f6d; }
 
 /* ── MAIN ────────────────────────────────────────── */
-.main { display: flex;
-  flex: 1;
-  overflow: hidden;
-  min-height: 0; }
+.main { display: flex; flex: 1; overflow: hidden; }
 
 /* ── CANVAS ──────────────────────────────────────── */
 .canvas-wrap {
-   flex: 1;
+  flex: 1;
   position: relative;
   background: #0a0d14;
-  height: 100%;
-  overflow: hidden;
 }
 
 /* React Flow overrides */
@@ -137,18 +132,42 @@ body {
   opacity: 0.25;
   cursor: not-allowed;
 }
-.react-flow__edge {
-  transition: opacity 0.6s ease;
-}
-.app {
+
+/* ── Botones de vista (Árbol / Horario) ──────── */
+.btn-vista {
+  padding: 5px 14px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-family: 'Space Mono', monospace;
+  font-weight: 700;
+  background: transparent;
+  border: 1px solid #1e2740;
+  color: #3e4a6a;
+  cursor: pointer;
+  transition: all 0.15s;
+  letter-spacing: 0.04em;
   display: flex;
-  flex-direction: column;
-  height: 100dvh;
-  overflow: hidden;
+  align-items: center;
+  gap: 6px;
 }
-.react-flow {
-  height: 100% !important;
+
+.btn-vista:hover {
+  border-color: #4f7cff;
+  color: #4f7cff;
 }
-.react-flow__attribution {
-  display: none;
+
+.btn-vista.activo {
+  background: rgba(79,124,255,0.12);
+  border-color: #4f7cff;
+  color: #4f7cff;
+}
+
+.vista-badge {
+  background: #ffd84f;
+  color: #0a0d14;
+  font-size: 9px;
+  font-weight: 700;
+  padding: 1px 5px;
+  border-radius: 99px;
+  font-family: 'Space Mono', monospace;
 }

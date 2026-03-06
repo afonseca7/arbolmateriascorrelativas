@@ -14,6 +14,7 @@ import { MATERIAS_INIT, ESTADOS, ANIOS } from './data/materias';
 import { calcularEstados, siguienteEstado } from './utils/logica';
 import Leyenda from './components/Leyenda';
 import MateriaNode from './components/MateriaNode';
+import Horario from './components/Horario';
 import './App.css';
 
 const STORAGE_KEY = 'utn-isi-frd-estados-v1';
@@ -54,7 +55,6 @@ function aplicarGuardado(materias, guardado) {
 
 const posicionesIniciales = buildPositions(MATERIAS_INIT);
 
-// ── Componente interno (necesita estar dentro de ReactFlowProvider) ──────────
 function FlowApp() {
   const { fitView } = useReactFlow();
 
@@ -63,15 +63,14 @@ function FlowApp() {
     return calcularEstados(aplicarGuardado(MATERIAS_INIT, guardado));
   });
 
-  const [filtroAnio, setFiltroAnio]       = useState(null);
+  const [vista, setVista] = useState('arbol'); // 'arbol' | 'horario'
+  const [filtroAnio, setFiltroAnio] = useState(null);
   const [soloDisponibles, setSoloDisponibles] = useState(false);
   const resaltadaRef = useRef(null);
 
-  // Historial de posiciones para undo/redo
-  // Cada entrada es un mapa { [id]: {x, y} }
   const historialPos = useRef([{ ...posicionesIniciales }]);
   const historialIdx = useRef(0);
-  const [historialLen, setHistorialLen] = useState(1); // para forzar re-render de botones
+  const [historialLen, setHistorialLen] = useState(1);
   const [historialCursor, setHistorialCursor] = useState(0);
 
   useEffect(() => { guardarEstados(materias); }, [materias]);
@@ -91,15 +90,10 @@ function FlowApp() {
     setMaterias(calcularEstados(MATERIAS_INIT));
   };
 
-  // Resetear solo posiciones al layout original
   const resetearPosiciones = useCallback(() => {
     setNodes((prev) =>
-      prev.map((n) => ({
-        ...n,
-        position: posicionesIniciales[parseInt(n.id)] ?? n.position,
-      }))
+      prev.map((n) => ({ ...n, position: posicionesIniciales[parseInt(n.id)] ?? n.position }))
     );
-    // Guardar en historial
     const nuevo = { ...posicionesIniciales };
     const base = historialPos.current.slice(0, historialIdx.current + 1);
     historialPos.current = [...base, nuevo];
@@ -113,9 +107,7 @@ function FlowApp() {
     if (historialIdx.current <= 0) return;
     historialIdx.current -= 1;
     const snap = historialPos.current[historialIdx.current];
-    setNodes((prev) =>
-      prev.map((n) => ({ ...n, position: snap[parseInt(n.id)] ?? n.position }))
-    );
+    setNodes((prev) => prev.map((n) => ({ ...n, position: snap[parseInt(n.id)] ?? n.position })));
     setHistorialCursor(historialIdx.current);
   }, []);
 
@@ -123,35 +115,32 @@ function FlowApp() {
     if (historialIdx.current >= historialPos.current.length - 1) return;
     historialIdx.current += 1;
     const snap = historialPos.current[historialIdx.current];
-    setNodes((prev) =>
-      prev.map((n) => ({ ...n, position: snap[parseInt(n.id)] ?? n.position }))
-    );
+    setNodes((prev) => prev.map((n) => ({ ...n, position: snap[parseInt(n.id)] ?? n.position })));
     setHistorialCursor(historialIdx.current);
   }, []);
 
-  // Hover DOM directo
   const hoverTimer = useRef(null);
 
-const handleHover = useCallback((id, allIds) => {
-  clearTimeout(hoverTimer.current);
-  hoverTimer.current = setTimeout(() => {
-    resaltadaRef.current = id;
-    if (id === null) return;
-    const relacionados = new Set(allIds);
-    relacionados.add(id);
-    document.querySelectorAll('.react-flow__node').forEach((el) => {
-      const nodeId = parseInt(el.getAttribute('data-id'));
-      el.style.opacity = relacionados.has(nodeId) ? '1' : '0.15';
-    });
-    document.querySelectorAll('.react-flow__edge').forEach((el) => {
-      const edgeId = el.getAttribute('id') || '';
-      const parts = edgeId.replace(/^[ca]-/, '').split('-');
-      const src = parseInt(parts[0]);
-      const tgt = parseInt(parts[1]);
-      el.style.opacity = (src === id || tgt === id) ? '1' : '0.05';
-    });
-  }, 600);
-}, []);
+  const handleHover = useCallback((id, allIds) => {
+    clearTimeout(hoverTimer.current);
+    hoverTimer.current = setTimeout(() => {
+      resaltadaRef.current = id;
+      if (id === null) return;
+      const relacionados = new Set(allIds);
+      relacionados.add(id);
+      document.querySelectorAll('.react-flow__node').forEach((el) => {
+        const nodeId = parseInt(el.getAttribute('data-id'));
+        el.style.opacity = relacionados.has(nodeId) ? '1' : '0.15';
+      });
+      document.querySelectorAll('.react-flow__edge').forEach((el) => {
+        const edgeId = el.getAttribute('id') || '';
+        const parts = edgeId.replace(/^[ca]-/, '').split('-');
+        const src = parseInt(parts[0]);
+        const tgt = parseInt(parts[1]);
+        el.style.opacity = (src === id || tgt === id) ? '1' : '0.05';
+      });
+    }, 600);
+  }, []);
 
   const handleHoverLeave = useCallback(() => {
     clearTimeout(hoverTimer.current);
@@ -222,7 +211,6 @@ const handleHover = useCallback((id, allIds) => {
   const [nodes, setNodes, onNodesChange] = useNodesState(rfNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(rfEdges);
 
-  // Sync nodos cuando cambia estado/filtro, preservando posiciones actuales
   useEffect(() => {
     setNodes((prev) => {
       const posMap = {};
@@ -233,14 +221,11 @@ const handleHover = useCallback((id, allIds) => {
 
   useEffect(() => { setEdges(rfEdges); }, [rfEdges, setEdges]);
 
-  // Guardar snapshot en historial cuando el usuario termina de arrastrar un nodo
   const onNodeDragStop = useCallback((_event, _node, allNodes) => {
     const snap = {};
     allNodes.forEach((n) => { snap[parseInt(n.id)] = { ...n.position }; });
-    // Descartar futuros si estamos en medio del historial
     const base = historialPos.current.slice(0, historialIdx.current + 1);
     historialPos.current = [...base, snap];
-    // Limitar a 50 pasos
     if (historialPos.current.length > 50) historialPos.current.shift();
     historialIdx.current = historialPos.current.length - 1;
     setHistorialLen(historialPos.current.length);
@@ -249,6 +234,7 @@ const handleHover = useCallback((id, allIds) => {
 
   const canUndo = historialCursor > 0;
   const canRedo = historialCursor < historialLen - 1;
+  const cursandoCount = materias.filter(m => m.estado === 'cursando').length;
 
   return (
     <div className="app">
@@ -261,49 +247,78 @@ const handleHover = useCallback((id, allIds) => {
           </div>
         </div>
         <div className="header-controls">
-          <div className="filtros-anio">
-            <button className={`btn-anio ${filtroAnio === null ? 'activo' : ''}`} onClick={() => setFiltroAnio(null)}>Todos</button>
-            {Object.entries(ANIOS).map(([anio, cfg]) => (
-              <button key={anio}
-                className={`btn-anio ${filtroAnio === Number(anio) ? 'activo' : ''}`}
-                style={{ '--anio-color': cfg.color }}
-                onClick={() => setFiltroAnio(filtroAnio === Number(anio) ? null : Number(anio))}
-              >{cfg.label}</button>
-            ))}
-          </div>
 
+          {/* Botones de vista */}
           <div className="btn-group">
-            <button className="btn-icon" onClick={undo} disabled={!canUndo} title="Deshacer movimiento">↩</button>
-            <button className="btn-icon" onClick={redo} disabled={!canRedo} title="Rehacer movimiento">↪</button>
-            <button className="btn-icon" onClick={resetearPosiciones} title="Resetear posiciones al layout original">⊞</button>
+            <button
+              className={`btn-vista ${vista === 'arbol' ? 'activo' : ''}`}
+              onClick={() => setVista('arbol')}
+            >Árbol</button>
+            <button
+              className={`btn-vista ${vista === 'horario' ? 'activo' : ''}`}
+              onClick={() => setVista('horario')}
+            >
+              Horario
+              {cursandoCount > 0 && (
+                <span className="vista-badge">{cursandoCount}</span>
+              )}
+            </button>
           </div>
 
-          <button className={`btn-toggle ${soloDisponibles ? 'activo' : ''}`} onClick={() => setSoloDisponibles(v => !v)}>Solo disponibles</button>
+          {vista === 'arbol' && (
+            <>
+              <div className="filtros-anio">
+                <button className={`btn-anio ${filtroAnio === null ? 'activo' : ''}`} onClick={() => setFiltroAnio(null)}>Todos</button>
+                {Object.entries(ANIOS).map(([anio, cfg]) => (
+                  <button key={anio}
+                    className={`btn-anio ${filtroAnio === Number(anio) ? 'activo' : ''}`}
+                    style={{ '--anio-color': cfg.color }}
+                    onClick={() => setFiltroAnio(filtroAnio === Number(anio) ? null : Number(anio))}
+                  >{cfg.label}</button>
+                ))}
+              </div>
+
+              <div className="btn-group">
+                <button className="btn-icon" onClick={undo} disabled={!canUndo} title="Deshacer">↩</button>
+                <button className="btn-icon" onClick={redo} disabled={!canRedo} title="Rehacer">↪</button>
+                <button className="btn-icon" onClick={resetearPosiciones} title="Resetear posiciones">⊞</button>
+              </div>
+
+              <button className={`btn-toggle ${soloDisponibles ? 'activo' : ''}`} onClick={() => setSoloDisponibles(v => !v)}>Solo disponibles</button>
+            </>
+          )}
+
           <button className="btn-reset" onClick={resetear}>Resetear progreso</button>
         </div>
       </header>
 
       <div className="main">
-        <Leyenda materias={materias} />
-        <div className="canvas-wrap">
-          <ReactFlow
-            nodes={nodes}
-            edges={edges}
-            onNodesChange={onNodesChange}
-            onEdgesChange={onEdgesChange}
-            onNodeDragStop={onNodeDragStop}
-            nodeTypes={nodeTypes}
-            fitView
-            fitViewOptions={{ padding: 0.15 }}
-            minZoom={0.3}
-            maxZoom={1.5}
-            onPaneClick={handleHoverLeave}
-            proOptions={{ hideAttribution: true }}
-          >
-            <Background color="#1a2035" gap={32} size={1} />
-            <Controls style={{ background: '#111520', border: '1px solid #1e2740', borderRadius: 8 }} />
-          </ReactFlow>
-        </div>
+        {vista === 'arbol' ? (
+          <>
+            <Leyenda materias={materias} />
+            <div className="canvas-wrap">
+              <ReactFlow
+                nodes={nodes}
+                edges={edges}
+                onNodesChange={onNodesChange}
+                onEdgesChange={onEdgesChange}
+                onNodeDragStop={onNodeDragStop}
+                nodeTypes={nodeTypes}
+                fitView
+                fitViewOptions={{ padding: 0.15 }}
+                minZoom={0.3}
+                maxZoom={1.5}
+                onPaneClick={handleHoverLeave}
+                proOptions={{ hideAttribution: true }}
+              >
+                <Background color="#1a2035" gap={32} size={1} />
+                <Controls style={{ background: '#111520', border: '1px solid #1e2740', borderRadius: 8 }} />
+              </ReactFlow>
+            </div>
+          </>
+        ) : (
+          <Horario materias={materias} onVolver={() => setVista('arbol')} />
+        )}
       </div>
     </div>
   );
