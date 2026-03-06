@@ -4,19 +4,6 @@ import './Horario.css';
 
 const DIAS = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
 
-// Genera todos los bloques de 15 min entre 17:00 y 23:15
-function generarBloques() {
-  const bloques = [];
-  for (let h = 17; h < 23; h++) {
-    for (let m = 0; m < 60; m += 15) {
-      bloques.push(`${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}`);
-    }
-  }
-  bloques.push('23:00', '23:15');
-  // Agregar 09:00 a 12:45 para el sábado
-  return bloques;
-}
-
 function timeToMinutes(t) {
   const [h, m] = t.split(':').map(Number);
   return h * 60 + m;
@@ -31,12 +18,12 @@ function minutesToTime(mins) {
 export default function Horario({ materias, onVolver }) {
   const cursando = materias.filter(m => m.estado === 'cursando');
 
-  // Calcular rango de horas real según las materias
-  const { filas, tieneSabado } = useMemo(() => {
+  const { filas, diasVisibles, celdas } = useMemo(() => {
     let minMin = Infinity;
     let maxMin = -Infinity;
     let tieneSabado = false;
 
+    // Paso 1: calcular rango de horas y días necesarios
     cursando.forEach(m => {
       if (!m.horarios) return;
       m.horarios.forEach(h => {
@@ -48,50 +35,54 @@ export default function Horario({ materias, onVolver }) {
       });
     });
 
-    if (minMin === Infinity) { minMin = timeToMinutes('17:00'); maxMin = timeToMinutes('23:15'); }
+    if (minMin === Infinity) {
+      minMin = timeToMinutes('17:00');
+      maxMin = timeToMinutes('23:15');
+    }
 
-    // Redondear hacia abajo/arriba en bloques de 15
     minMin = Math.floor(minMin / 15) * 15;
     maxMin = Math.ceil(maxMin / 15) * 15;
 
+    // Generar filas de 15 en 15 minutos
     const filas = [];
     for (let t = minMin; t < maxMin; t += 15) {
       filas.push(minutesToTime(t));
     }
 
-    return { filas, tieneSabado };
-  }, [cursando]);
+    const diasVisibles = tieneSabado ? DIAS : DIAS.filter(d => d !== 'Sáb');
 
-  const diasVisibles = tieneSabado ? DIAS : DIAS.filter(d => d !== 'Sáb');
-
-  // Para cada celda (dia, fila) buscar qué materia ocupa ese bloque
-  const celdas = useMemo(() => {
-    // mapa: "dia-time" -> { materia, esInicio, rowSpan }
-    const mapa = {};
+    // Paso 2: construir mapa de celdas procesando CADA horario de CADA materia
+    const celdas = {};
 
     cursando.forEach(m => {
       if (!m.horarios) return;
-      const anioColor = ANIOS[m.anio].color;
+      const color = ANIOS[m.anio].color;
 
       m.horarios.forEach(h => {
         const ini = timeToMinutes(h.inicio);
         const fin = timeToMinutes(h.fin);
-        const bloques = Math.round((fin - ini) / 15);
+        const rowSpan = Math.round((fin - ini) / 15);
 
-        const key = `${h.dia}-${h.inicio}`;
-        if (!mapa[key]) {
-          mapa[key] = { materia: m, color: anioColor, inicio: h.inicio, fin: h.fin, rowSpan: bloques, dia: h.dia };
-        }
+        // Celda de inicio
+        const keyInicio = `${h.dia}-${h.inicio}`;
+        celdas[keyInicio] = {
+          materia: m,
+          color,
+          inicio: h.inicio,
+          fin: h.fin,
+          rowSpan,
+          dia: h.dia,
+        };
 
-        // Marcar bloques intermedios como "ocupados"
+        // Marcar bloques intermedios como ocupados
         for (let t = ini + 15; t < fin; t += 15) {
           const k = `${h.dia}-${minutesToTime(t)}`;
-          mapa[k] = { ocupado: true };
+          celdas[k] = { ocupado: true };
         }
       });
     });
 
-    return mapa;
+    return { filas, diasVisibles, celdas };
   }, [cursando]);
 
   if (cursando.length === 0) {
@@ -131,13 +122,10 @@ export default function Horario({ materias, onVolver }) {
           </thead>
           <tbody>
             {filas.map((hora, filaIdx) => {
-              // Solo mostrar label cada 2 filas (30 min) para no saturar
               const mostrarLabel = filaIdx % 2 === 0;
               return (
                 <tr key={hora} className={mostrarLabel ? 'tr-label' : 'tr-sub'}>
-                  <td className="td-hora">
-                    {mostrarLabel ? hora : ''}
-                  </td>
+                  <td className="td-hora">{mostrarLabel ? hora : ''}</td>
                   {diasVisibles.map(dia => {
                     const key = `${dia}-${hora}`;
                     const celda = celdas[key];
