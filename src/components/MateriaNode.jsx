@@ -8,6 +8,8 @@ const MateriaNode = memo(function MateriaNode({ data }) {
   const estado = ESTADOS[materia.estado];
   const anio = ANIOS[materia.anio];
 
+  const tieneHorarios = materia.horarios && materia.horarios.length > 0;
+
   return (
     <div
       className={`mnode ${materia.estado} ${materia.estado !== 'bloqueada' ? 'clickable' : ''}`}
@@ -38,6 +40,21 @@ const MateriaNode = memo(function MateriaNode({ data }) {
         <span className="mnode-icon">{estado.icon}</span>
         <span className="mnode-label">{estado.label}</span>
         <span className="mnode-id">#{materia.id}</span>
+
+        {/* Ícono de reloj solo si tiene horarios */}
+        {tieneHorarios && (
+          <div className="mnode-tooltip-wrap">
+            <span className="mnode-clock">🕐</span>
+            <div className="mnode-tooltip">
+              {materia.horarios.map((h, i) => (
+                <div key={i} className="mnode-tooltip-row">
+                  <span className="mnode-tooltip-dia">{h.dia}</span>
+                  <span className="mnode-tooltip-hora">{h.inicio} – {h.fin}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
 
       <div className="mnode-bar" />

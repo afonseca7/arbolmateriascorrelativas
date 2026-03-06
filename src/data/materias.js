@@ -1,12 +1,10 @@
 // Datos del Plan 2023 - ISI UTN FRD
-// Estado posible: 'aprobada' | 'cursando' | 'previa' | 'disponible' | 'bloqueada'
-
 export const ESTADOS = {
-  aprobada: { label: 'Aprobada', color: '#00e5a0', bg: 'rgba(0,229,160,0.12)', icon: '✓' },
-  cursando: { label: 'Cursando', color: '#ffd84f', bg: 'rgba(255,216,79,0.12)', icon: '◎' },
-  previa: { label: 'Final Pendiente', color: '#ff9f4f', bg: 'rgba(255,159,79,0.12)', icon: '◑' },
-  disponible: { label: 'Puedo anotarme', color: '#4f7cff', bg: 'rgba(79,124,255,0.14)', icon: '→' },
-  bloqueada: { label: 'Sin cursar', color: '#2e3a55', bg: 'rgba(46,58,85,0.3)', icon: '○' },
+  aprobada:  { label: 'Aprobada',        color: '#00e5a0', bg: 'rgba(0,229,160,0.12)',  icon: '✓' },
+  cursando:  { label: 'Cursando',        color: '#ffd84f', bg: 'rgba(255,216,79,0.12)', icon: '◎' },
+  previa:    { label: 'Final Pendiente', color: '#ff9f4f', bg: 'rgba(255,159,79,0.12)', icon: '◑' },
+  disponible:{ label: 'Puedo anotarme', color: '#4f7cff', bg: 'rgba(79,124,255,0.14)', icon: '→' },
+  bloqueada: { label: 'Sin cursar',      color: '#2e3a55', bg: 'rgba(46,58,85,0.3)',    icon: '○' },
 };
 
 export const ANIOS = {
@@ -17,8 +15,6 @@ export const ANIOS = {
   5: { label: '5° Año', color: '#00e5a0' },
 };
 
-// correlativasCursar: IDs que necesito CURSAR para poder cursar esta
-// correlativasAprobar: IDs que necesito APROBAR (rendir final) para poder cursar esta
 export const MATERIAS_INIT = [
   // ── 1° AÑO ──────────────────────────────────────────────────────────────────
   {
@@ -28,6 +24,11 @@ export const MATERIAS_INIT = [
     correlativasCursar: [],
     correlativasAprobar: [],
     estado: 'bloqueada',
+    horarios: [
+      { dia: 'Mié', inicio: '19:15', fin: '20:45' },
+      { dia: 'Jue', inicio: '19:15', fin: '20:45' },
+      { dia: 'Vie', inicio: '18:30', fin: '20:45' },
+    ],
   },
   {
     id: 2,
@@ -36,6 +37,11 @@ export const MATERIAS_INIT = [
     correlativasCursar: [],
     correlativasAprobar: [],
     estado: 'bloqueada',
+    horarios: [
+      { dia: 'Lun', inicio: '19:15', fin: '20:45' },
+      { dia: 'Mar', inicio: '18:30', fin: '20:45' },
+      { dia: 'Jue', inicio: '21:00', fin: '23:15' },
+    ],
   },
   {
     id: 3,
@@ -44,6 +50,9 @@ export const MATERIAS_INIT = [
     correlativasCursar: [],
     correlativasAprobar: [],
     estado: 'bloqueada',
+    horarios: [
+      { dia: 'Jue', inicio: '17:00', fin: '20:45' },
+    ],
   },
   {
     id: 4,
@@ -52,6 +61,9 @@ export const MATERIAS_INIT = [
     correlativasCursar: [],
     correlativasAprobar: [],
     estado: 'bloqueada',
+    horarios: [
+      { dia: 'Mié', inicio: '17:00', fin: '18:30' },
+    ],
   },
   {
     id: 5,
@@ -60,6 +72,9 @@ export const MATERIAS_INIT = [
     correlativasCursar: [],
     correlativasAprobar: [],
     estado: 'bloqueada',
+    horarios: [
+      { dia: 'Jue', inicio: '21:00', fin: '23:15' },
+    ],
   },
   {
     id: 6,
@@ -68,6 +83,10 @@ export const MATERIAS_INIT = [
     correlativasCursar: [],
     correlativasAprobar: [],
     estado: 'bloqueada',
+    horarios: [
+      { dia: 'Mar', inicio: '21:00', fin: '23:15' },
+      { dia: 'Vie', inicio: '17:00', fin: '18:30' },
+    ],
   },
   {
     id: 7,
@@ -76,6 +95,9 @@ export const MATERIAS_INIT = [
     correlativasCursar: [],
     correlativasAprobar: [],
     estado: 'bloqueada',
+    horarios: [
+      { dia: 'Mié', inicio: '17:45', fin: '20:45' },
+    ],
   },
   {
     id: 8,
@@ -84,6 +106,9 @@ export const MATERIAS_INIT = [
     correlativasCursar: [],
     correlativasAprobar: [],
     estado: 'bloqueada',
+    horarios: [
+      { dia: 'Mar', inicio: '18:30', fin: '20:45' },
+    ],
   },
 
   // ── 2° AÑO ──────────────────────────────────────────────────────────────────
@@ -94,6 +119,10 @@ export const MATERIAS_INIT = [
     correlativasCursar: [1, 2],
     correlativasAprobar: [],
     estado: 'bloqueada',
+    horarios: [
+      { dia: 'Mié', inicio: '21:00', fin: '23:15' },
+      { dia: 'Jue', inicio: '21:00', fin: '23:15' },
+    ],
   },
   {
     id: 10,
@@ -102,6 +131,9 @@ export const MATERIAS_INIT = [
     correlativasCursar: [1, 3],
     correlativasAprobar: [],
     estado: 'bloqueada',
+    horarios: [
+      { dia: 'Mar', inicio: '19:15', fin: '22:30' },
+    ],
   },
   {
     id: 11,
@@ -110,6 +142,9 @@ export const MATERIAS_INIT = [
     correlativasCursar: [],
     correlativasAprobar: [],
     estado: 'bloqueada',
+    horarios: [
+      { dia: 'Mar', inicio: '17:00', fin: '20:45' },
+    ],
   },
   {
     id: 12,
@@ -118,6 +153,9 @@ export const MATERIAS_INIT = [
     correlativasCursar: [4],
     correlativasAprobar: [],
     estado: 'bloqueada',
+    horarios: [
+      { dia: 'Mar', inicio: '17:00', fin: '18:30' },
+    ],
   },
   {
     id: 13,
@@ -126,6 +164,9 @@ export const MATERIAS_INIT = [
     correlativasCursar: [5, 6],
     correlativasAprobar: [],
     estado: 'bloqueada',
+    horarios: [
+      { dia: 'Lun', inicio: '18:30', fin: '21:45' },
+    ],
   },
   {
     id: 14,
@@ -134,6 +175,9 @@ export const MATERIAS_INIT = [
     correlativasCursar: [5, 6],
     correlativasAprobar: [],
     estado: 'bloqueada',
+    horarios: [
+      { dia: 'Jue', inicio: '17:45', fin: '20:45' },
+    ],
   },
   {
     id: 15,
@@ -142,6 +186,9 @@ export const MATERIAS_INIT = [
     correlativasCursar: [7],
     correlativasAprobar: [],
     estado: 'bloqueada',
+    horarios: [
+      { dia: 'Lun', inicio: '17:45', fin: '20:45' },
+    ],
   },
   {
     id: 16,
@@ -151,6 +198,10 @@ export const MATERIAS_INIT = [
     correlativasCursar: [6, 8],
     correlativasAprobar: [],
     estado: 'bloqueada',
+    horarios: [
+      { dia: 'Lun', inicio: '21:45', fin: '23:15' },
+      { dia: 'Vie', inicio: '21:00', fin: '23:15' },
+    ],
   },
   {
     id: 17,
@@ -159,6 +210,9 @@ export const MATERIAS_INIT = [
     correlativasCursar: [1, 2],
     correlativasAprobar: [],
     estado: 'bloqueada',
+    horarios: [
+      { dia: 'Vie', inicio: '17:45', fin: '20:45' },
+    ],
   },
 
   // ── 3° AÑO ──────────────────────────────────────────────────────────────────
@@ -169,6 +223,9 @@ export const MATERIAS_INIT = [
     correlativasCursar: [],
     correlativasAprobar: [1, 2],
     estado: 'bloqueada',
+    horarios: [
+      { dia: 'Vie', inicio: '20:00', fin: '23:15' },
+    ],
   },
   {
     id: 19,
@@ -177,6 +234,9 @@ export const MATERIAS_INIT = [
     correlativasCursar: [13, 16],
     correlativasAprobar: [5, 6],
     estado: 'bloqueada',
+    horarios: [
+      { dia: 'Jue', inicio: '17:45', fin: '22:30' },
+    ],
   },
   {
     id: 20,
@@ -185,6 +245,10 @@ export const MATERIAS_INIT = [
     correlativasCursar: [14, 16],
     correlativasAprobar: [5, 6],
     estado: 'bloqueada',
+    horarios: [
+      { dia: 'Mar', inicio: '19:15', fin: '20:45' },
+      { dia: 'Jue', inicio: '19:15', fin: '20:45' },
+    ],
   },
   {
     id: 21,
@@ -193,6 +257,10 @@ export const MATERIAS_INIT = [
     correlativasCursar: [],
     correlativasAprobar: [3, 7],
     estado: 'bloqueada',
+    horarios: [
+      { dia: 'Mar', inicio: '17:45', fin: '19:15' },
+      { dia: 'Vie', inicio: '18:30', fin: '19:15' },
+    ],
   },
   {
     id: 22,
@@ -201,6 +269,9 @@ export const MATERIAS_INIT = [
     correlativasCursar: [9],
     correlativasAprobar: [1, 2],
     estado: 'bloqueada',
+    horarios: [
+      { dia: 'Mié', inicio: '18:30', fin: '20:45' },
+    ],
   },
   {
     id: 23,
@@ -210,6 +281,10 @@ export const MATERIAS_INIT = [
     correlativasCursar: [14, 16],
     correlativasAprobar: [4, 6, 8],
     estado: 'bloqueada',
+    horarios: [
+      { dia: 'Mié', inicio: '21:00', fin: '23:15' },
+      { dia: 'Jue', inicio: '21:00', fin: '23:15' },
+    ],
   },
   {
     id: 24,
@@ -218,6 +293,9 @@ export const MATERIAS_INIT = [
     correlativasCursar: [11],
     correlativasAprobar: [],
     estado: 'bloqueada',
+    horarios: [
+      { dia: 'Mar', inicio: '18:30', fin: '19:15' },
+    ],
   },
 
   // ── 4° AÑO ──────────────────────────────────────────────────────────────────
@@ -228,6 +306,10 @@ export const MATERIAS_INIT = [
     correlativasCursar: [19, 20, 23],
     correlativasAprobar: [13, 14],
     estado: 'bloqueada',
+    horarios: [
+      { dia: 'Mar', inicio: '21:00', fin: '23:15' },
+      { dia: 'Vie', inicio: '20:00', fin: '22:30' },
+    ],
   },
   {
     id: 26,
@@ -236,6 +318,9 @@ export const MATERIAS_INIT = [
     correlativasCursar: [15, 21],
     correlativasAprobar: [],
     estado: 'bloqueada',
+    horarios: [
+      { dia: 'Vie', inicio: '20:00', fin: '23:15' },
+    ],
   },
   {
     id: 27,
@@ -244,6 +329,9 @@ export const MATERIAS_INIT = [
     correlativasCursar: [17, 22],
     correlativasAprobar: [],
     estado: 'bloqueada',
+    horarios: [
+      { dia: 'Mié', inicio: '19:15', fin: '22:30' },
+    ],
   },
   {
     id: 28,
@@ -252,6 +340,10 @@ export const MATERIAS_INIT = [
     correlativasCursar: [17],
     correlativasAprobar: [9],
     estado: 'bloqueada',
+    horarios: [
+      { dia: 'Mar', inicio: '17:45', fin: '19:15' },
+      { dia: 'Vie', inicio: '18:30', fin: '19:15' },
+    ],
   },
   {
     id: 29,
@@ -260,6 +352,9 @@ export const MATERIAS_INIT = [
     correlativasCursar: [10, 22],
     correlativasAprobar: [9],
     estado: 'bloqueada',
+    horarios: [
+      { dia: 'Jue', inicio: '19:15', fin: '21:45' },
+    ],
   },
   {
     id: 30,
@@ -269,6 +364,9 @@ export const MATERIAS_INIT = [
     correlativasCursar: [18, 23],
     correlativasAprobar: [16],
     estado: 'bloqueada',
+    horarios: [
+      { dia: 'Sáb', inicio: '09:00', fin: '12:45' },
+    ],
   },
 
   // ── 5° AÑO ──────────────────────────────────────────────────────────────────
@@ -279,6 +377,9 @@ export const MATERIAS_INIT = [
     correlativasCursar: [28],
     correlativasAprobar: [17, 22],
     estado: 'bloqueada',
+    horarios: [
+      { dia: 'Mar', inicio: '18:30', fin: '20:45' },
+    ],
   },
   {
     id: 32,
@@ -287,6 +388,9 @@ export const MATERIAS_INIT = [
     correlativasCursar: [28],
     correlativasAprobar: [17, 19],
     estado: 'bloqueada',
+    horarios: [
+      { dia: 'Jue', inicio: '21:00', fin: '23:15' },
+    ],
   },
   {
     id: 33,
@@ -295,6 +399,10 @@ export const MATERIAS_INIT = [
     correlativasCursar: [18, 27],
     correlativasAprobar: [23],
     estado: 'bloqueada',
+    horarios: [
+      { dia: 'Jue', inicio: '19:15', fin: '21:45' },
+      { dia: 'Vie', inicio: '21:00', fin: '23:15' },
+    ],
   },
   {
     id: 34,
@@ -303,6 +411,9 @@ export const MATERIAS_INIT = [
     correlativasCursar: [24, 30],
     correlativasAprobar: [18],
     estado: 'bloqueada',
+    horarios: [
+      { dia: 'Mié', inicio: '18:30', fin: '20:45' },
+    ],
   },
   {
     id: 35,
@@ -311,6 +422,9 @@ export const MATERIAS_INIT = [
     correlativasCursar: [26, 30],
     correlativasAprobar: [20, 21],
     estado: 'bloqueada',
+    horarios: [
+      { dia: 'Jue', inicio: '17:00', fin: '19:15' },
+    ],
   },
   {
     id: 36,
@@ -320,5 +434,9 @@ export const MATERIAS_INIT = [
     correlativasCursar: [25, 26, 30],
     correlativasAprobar: [12, 20, 23],
     estado: 'bloqueada',
+    horarios: [
+      { dia: 'Vie', inicio: '18:30', fin: '19:15' },
+      { dia: 'Vie', inicio: '21:00', fin: '23:15' },
+    ],
   },
 ];
