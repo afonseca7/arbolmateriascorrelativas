@@ -2,16 +2,9 @@
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-body {
-  background: #0a0d14;
-  color: #e8eaf2;
-  font-family: 'Syne', sans-serif;
-  height: 100dvh;
-  overflow: hidden;
-  -webkit-font-smoothing: antialiased;
-}
 
-#root { height: 100dvh; display: flex; flex-direction: column; }
+
+.app { display: flex; flex-direction: column; height: 100%; }
 
 /* ── HEADER ─────────────────────────────────────── */
 .header {
@@ -70,13 +63,15 @@ body {
 .btn-reset:hover { background: rgba(255,95,109,0.08); border-color: #ff5f6d; color: #ff5f6d; }
 
 /* ── MAIN ────────────────────────────────────────── */
-.main { display: flex; flex: 1; overflow: hidden; }
+.main { display: flex; flex: 1; min-height: 0; }
 
 /* ── CANVAS ──────────────────────────────────────── */
 .canvas-wrap {
   flex: 1;
   position: relative;
   background: #0a0d14;
+  min-width: 0;
+  min-height: 0;
 }
 
 /* React Flow overrides */
@@ -170,4 +165,10 @@ body {
   padding: 1px 5px;
   border-radius: 99px;
   font-family: 'Space Mono', monospace;
+}
+
+/* Ocultar borde/scrollbar azul del contenedor React Flow */
+.react-flow {
+  border: none !important;
+  outline: none !important;
 }

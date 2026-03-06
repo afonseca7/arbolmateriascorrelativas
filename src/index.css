@@ -4,9 +4,20 @@
   padding: 0;
 }
 
+html {
+  background: #0a0d14;
+}
+
 body {
   background: #0a0d14;
   color: #e8eaf2;
   font-family: 'Syne', sans-serif;
   -webkit-font-smoothing: antialiased;
+  overflow: hidden;
+}
+
+#root {
+  height: calc(var(--vh, 1vh) * 100);
+  display: flex;
+  flex-direction: column;
 }
