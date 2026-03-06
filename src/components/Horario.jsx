@@ -3,7 +3,7 @@ import { ANIOS } from '../data/materias';
 import './Horario.css';
 
 const DIAS = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
-const BLOQUE_H = 20; // px por cada bloque de 15 min
+const BLOQUE_H = 22;
 
 function timeToMinutes(t) {
   const [h, m] = t.split(':').map(Number);
