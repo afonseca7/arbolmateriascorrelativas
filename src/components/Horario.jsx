@@ -23,7 +23,7 @@ export default function Horario({ materias, onVolver }) {
     let maxMin = -Infinity;
     let tieneSabado = false;
 
-    // Paso 1: calcular rango de horas y días necesarios
+    // Paso 1: calcular rango real de horas
     cursando.forEach(m => {
       if (!m.horarios) return;
       m.horarios.forEach(h => {
@@ -40,18 +40,20 @@ export default function Horario({ materias, onVolver }) {
       maxMin = timeToMinutes('23:15');
     }
 
+    // Redondear a múltiplos de 15
     minMin = Math.floor(minMin / 15) * 15;
     maxMin = Math.ceil(maxMin / 15) * 15;
 
-    // Generar filas de 15 en 15 minutos
-    const filas = [];
+    // Generar lista de tiempos (cada 15 min)
+    const tiempos = [];
     for (let t = minMin; t < maxMin; t += 15) {
-      filas.push(minutesToTime(t));
+      tiempos.push(t); // guardamos en minutos para operar fácil
     }
 
     const diasVisibles = tieneSabado ? DIAS : DIAS.filter(d => d !== 'Sáb');
 
-    // Paso 2: construir mapa de celdas procesando CADA horario de CADA materia
+    // Paso 2: construir mapa de celdas
+    // clave: "dia-minutos" -> datos o { ocupado: true }
     const celdas = {};
 
     cursando.forEach(m => {
@@ -61,28 +63,27 @@ export default function Horario({ materias, onVolver }) {
       m.horarios.forEach(h => {
         const ini = timeToMinutes(h.inicio);
         const fin = timeToMinutes(h.fin);
+
+        // rowSpan = cuántos bloques de 15min ocupa exactamente
         const rowSpan = Math.round((fin - ini) / 15);
 
-        // Celda de inicio
-        const keyInicio = `${h.dia}-${h.inicio}`;
-        celdas[keyInicio] = {
-          materia: m,
-          color,
-          inicio: h.inicio,
-          fin: h.fin,
-          rowSpan,
-          dia: h.dia,
-        };
+        // Solo crear celda si ese bloque de inicio existe en nuestras filas
+        if (ini >= minMin && ini < maxMin) {
+          const key = `${h.dia}-${ini}`;
+          if (!celdas[key]) {
+            celdas[key] = { materia: m, color, inicio: h.inicio, fin: h.fin, rowSpan };
+          }
 
-        // Marcar bloques intermedios como ocupados
-        for (let t = ini + 15; t < fin; t += 15) {
-          const k = `${h.dia}-${minutesToTime(t)}`;
-          celdas[k] = { ocupado: true };
+          // Marcar bloques intermedios como ocupados
+          for (let t = ini + 15; t < fin; t += 15) {
+            const k = `${h.dia}-${t}`;
+            if (!celdas[k]) celdas[k] = { ocupado: true };
+          }
         }
       });
     });
 
-    return { filas, diasVisibles, celdas };
+    return { filas: tiempos, diasVisibles, celdas };
   }, [cursando]);
 
   if (cursando.length === 0) {
@@ -121,17 +122,22 @@ export default function Horario({ materias, onVolver }) {
             </tr>
           </thead>
           <tbody>
-            {filas.map((hora, filaIdx) => {
+            {filas.map((mins, filaIdx) => {
+              const hora = minutesToTime(mins);
               const mostrarLabel = filaIdx % 2 === 0;
+
               return (
-                <tr key={hora} className={mostrarLabel ? 'tr-label' : 'tr-sub'}>
+                <tr key={mins} className={mostrarLabel ? 'tr-label' : 'tr-sub'}>
                   <td className="td-hora">{mostrarLabel ? hora : ''}</td>
+
                   {diasVisibles.map(dia => {
-                    const key = `${dia}-${hora}`;
+                    const key = `${dia}-${mins}`;
                     const celda = celdas[key];
 
+                    // Bloque intermedio: no renderizar celda (rowSpan lo cubre)
                     if (celda?.ocupado) return null;
 
+                    // Bloque con materia
                     if (celda?.materia) {
                       return (
                         <td
@@ -148,6 +154,7 @@ export default function Horario({ materias, onVolver }) {
                       );
                     }
 
+                    // Celda vacía
                     return <td key={dia} className="td-vacio" />;
                   })}
                 </tr>
