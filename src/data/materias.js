@@ -164,7 +164,7 @@ export const MATERIAS_INIT = [
     id: 20, nombre: 'Desarrollo de Software', anio: 3,
     correlativasCursar: [14, 16], correlativasAprobar: [5, 6], estado: 'bloqueada',
     horarios: [
-      { dia: 'Mar', inicio: '19:15', fin: '20:45' },
+      { dia: 'Mar', inicio: '19:15', fin: '21:00' },
       { dia: 'Jue', inicio: '19:15', fin: '20:45' },
     ],
   },
