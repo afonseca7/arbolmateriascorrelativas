@@ -25,6 +25,16 @@ Herramienta web interactiva para planificar el cursado de Ingeniería en Sistema
 - **Despliegue:** Vercel
 
 ## Cómo ejecutarlo en local
+```bash
+git clone [https://github.com/afonseca7/arbolmateriascorrelativas.git](https://github.com/afonseca7/arbolmateriascorrelativas.git)
+cd arbolmateriascorrelativas
+npm install
+npm run dev
+```
+
+## Contexto y enfoque de desarrollo
+
+Proyecto propio nacido de una necesidad real como estudiante de Ingeniería en Sistemas (UTN FRD). Definí el modelado de reglas de correlatividad del Plan 2023, la estructura de pantallas y las iteraciones de UX/UI a partir del uso real, implementando el código mediante un flujo de prototipado asistido por IA (Claude) y validando manualmente cada regla de negocio y vista.
 
 ```bash
 git clone [https://github.com/afonseca7/arbolmateriascorrelativas.git](https://github.com/afonseca7/arbolmateriascorrelativas.git)
